@@ -53,7 +53,16 @@ $ terraform apply -auto-approve
 
 This process can take 20-25 minutes to complete. When finished, the output of the command should look like this:
 
-```<output?>```
+```json
+fsx-management-ip = toset([
+  "10.0.1.13",
+])
+fsx-ontap-id = "fs-03197c52f4cd331ff"
+fsx-svm-name = "ekssvm"
+region = "us-east-1"
+secret_arn = "arn:aws:secretsmanager:us-east-1:139763910815:secret:fsxn-password-secret-8DKLpwTi-8DLlwE"
+zz_update_kubeconfig_command = "aws eks update-kubeconfig --name eks-protect-8DKLpwTi --alias eks-primary --region us-east-1"
+```
 
 Next, copy and run the AWS CLI command from the `update_kubeconfig_command` output above and check we’re able to reach the cluster by running `kubectl get nodes`:
 ```shell
