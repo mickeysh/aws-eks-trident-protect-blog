@@ -53,7 +53,7 @@ $ terraform apply -auto-approve
 
 This process can take 20-25 minutes to complete. When finished, the output of the command should look like this:
 
-```json
+```shell
 fsx-management-ip = toset([
   "10.0.1.13",
 ])
