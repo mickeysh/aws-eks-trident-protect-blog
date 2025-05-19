@@ -102,7 +102,13 @@ If you have an existing S3 bucket, you can use it. If not, used the following st
 aws s3 mb s3://<bucket_name> --region <aws_region>
 ```
 
-### 4. Create EKS Secret to store user credentials
+### 4. Create EKS Volume Snapshot Classes and Secret to store user credentials
+Create volume snapshot classes for EBS and FSx for ONTAP:
+```shell
+cd manifests
+kubectl apply -f ../manifests/fsxn-volume-snapshot-class.yaml
+kubectl apply -f ../manifests/ebs-volume-snapshot-class.yaml
+```
 Create a secret to store the trident protect user AWS accessKey and secretKey. If your account requires this, you can also use a sessionToken.
 Use the following example to create the secret:
 ```shell
