@@ -12,15 +12,6 @@ metadata:
     app.kuberneres.io/owner: retail-store-sample
     app.kubernetes.io/managed-by: Helm
 ---
-# Source: catalog/templates/mysql-secret.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: catalog-db
-data:
-  username: "Y2F0YWxvZw=="
-  password: "YzE5ZGVwTTRaTmg4OHBkUA=="
----
 # Source: catalog/templates/configmap.yml
 apiVersion: v1
 kind: ConfigMap
@@ -444,15 +435,6 @@ metadata:
     app.kubernetes.io/component: service
     app.kuberneres.io/owner: retail-store-sample
     app.kubernetes.io/managed-by: Helm
----
-# Source: orders/templates/mysql-secret.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: orders-db
-data:
-  username: "b3JkZXJz"
-  password: "Wk5QSHgwQ1lSWTBnUWg2WQ=="
 ---
 # Source: orders/templates/rabbitmq-secret.yaml
 apiVersion: v1

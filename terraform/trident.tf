@@ -107,6 +107,47 @@ resource "kubernetes_namespace_v1" "tenant2" {
   depends_on = [module.eks]
 }
 
+
+resource "random_string" "sample_sql_user" {
+  length           = 8
+  min_upper        = 1
+  upper            = true
+  numeric          = true
+  special          = false
+}
+
+resource "random_string" "sample_sql_password" {
+  length           = 24
+  min_lower        = 1
+  min_upper        = 1
+  numeric          = false
+  special          = false
+}
+
+resource "kubernetes_secret_v1" "catalog-db" {
+  provider           = kubernetes.cluster1
+  metadata {
+    name      = "catalog-db"
+    namespace = kubernetes_namespace_v1.tenant0.metadata[0].name
+  }
+  data = {
+    username = base64encode(random_string.sample_sql_user.result)
+    password = base64encode(random_string.sample_sql_password.result)
+  }
+}
+
+resource "kubernetes_secret_v1" "orders-db" {
+  provider           = kubernetes.cluster1
+  metadata {
+    name      = "orders-db"
+    namespace = kubernetes_namespace_v1.tenant0.metadata[0].name
+  }
+  data = {
+    username = base64encode(random_string.sample_sql_user.result)
+    password = base64encode(random_string.sample_sql_password.result)
+  }
+}
+
 data "kubectl_path_documents" "sample_app_tenant0" {
   pattern = "../manifests/sample.yaml"
 }
@@ -115,7 +156,7 @@ resource "kubectl_manifest" "sample_app_tenant0" {
   provider           = kubectl.cluster1
   override_namespace = "tenant0"
   wait               = true
-  depends_on         = [kubectl_manifest.trident_storage_class_san, kubectl_manifest.trident_storage_class_nas, kubernetes_namespace_v1.tenant0, helm_release.trident, kubectl_manifest.ebs_storage_class]
+  depends_on         = [kubernetes_secret_v1.catalog-db,kubernetes_secret_v1.orders-db, kubectl_manifest.trident_storage_class_nas, kubernetes_namespace_v1.tenant0, helm_release.trident, kubectl_manifest.ebs_storage_class]
   for_each           = toset(data.kubectl_path_documents.sample_app_tenant0.documents)
   yaml_body          = each.value
 }
